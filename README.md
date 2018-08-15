@@ -25,10 +25,10 @@ npm install isocless
 ### Code
 
 ```TypeScript
-    import { IcModule, OnReady, OnMessage, CommandsManager, Command } from 'isocless';
+    import { IcModule, OnReady, OnMessage, CommandsManager, IcCommand } from 'isocless';
     import * as Discord from 'discord.js';
 
-    @Command()
+    @IcCommand()
     class PingCommand implements Run {
         constructor(
             private client: Discord.Client
