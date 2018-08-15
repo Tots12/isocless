@@ -1,6 +1,6 @@
 {
   "name": "isocless",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "One Framework for creating Discord Bots with TypeScript.",
   "main": "dist/index.js",
   "scripts": {

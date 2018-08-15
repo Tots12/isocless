@@ -47,19 +47,17 @@ export class CommandsManager {
 function getClassConstructorParameters(t: object): string[] {
     let params: string[] = Reflect.getMetadata('design:paramtypes', t);
 
-    if (params) {
-        params.forEach((param, i) => {
+    params.forEach((param, i) => {
+        params[i] = param.toString()
+            .split("{")[0]
+            .split(" ")[1];
+
+        if (params[i].includes("(") && params[i].includes(")")) {
             params[i] = param.toString()
-                .split("{")[0]
-                .split(" ")[1];
-    
-            if (params[i].includes("(") && params[i].includes(")")) {
-                params[i] = param.toString()
-                    .split("(")[0]
-                    .split("function ")[1];
-            }
-        });
-    }
+                .split("(")[0]
+                .split("function ")[1];
+        }
+    });
 
     return params;
 }
@@ -81,27 +79,25 @@ export const IcModule = (icModule: IcModule) => {
             let commands: any[] = [];
 
             icModule.providers.forEach(provider => {
-                if (provider) {
-                    let Parameters: string[] = getClassConstructorParameters(provider);
-                    let addedParameters: any[] = [];
+                let Parameters: string[] = getClassConstructorParameters(provider);
+                let addedParameters: any[] = [];
 
-                    Parameters.forEach(parameter => {
-                        let found = CanAddName.find(can => {
-                            return can.name == parameter;
-                        });
-
-                        if (typeof found !== 'undefined') {
-                            addedParameters.push(found.ref);
-                        } else {
-                            addedParameters.push(undefined);
-                        }
+                Parameters.forEach(parameter => {
+                    let found = CanAddName.find(can => {
+                        return can.name == parameter;
                     });
 
-                    let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)))
+                    if (typeof found !== 'undefined') {
+                        addedParameters.push(found.ref);
+                    } else {
+                        addedParameters.push(undefined);
+                    }
+                });
 
-                    providers.push(providerObj);
-                    CanAddName.push({ ref: providerObj, name: provider.name });
-                }
+                let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)))
+
+                providers.push(providerObj);
+                CanAddName.push({ ref: providerObj, name: provider.name });
             });
 
             let cmdNames: string[] = [];
@@ -113,27 +109,25 @@ export const IcModule = (icModule: IcModule) => {
             CanAddName.push({ name: "Commands", ref: cmdNames });
 
             icModule.commands.forEach(command => {
-                if (command) {
-                    let Parameters: string[] = getClassConstructorParameters(command.comp);
-                    let addedParameters: any[] = [];
+                let Parameters: string[] = getClassConstructorParameters(command.comp);
+                let addedParameters: any[] = [];
 
-                    Parameters.forEach(parameter => {
-                        let found = CanAddName.find(can => {
-                            return can.name == parameter;
-                        });
-
-                        if (typeof found !== 'undefined') {
-                            addedParameters.push(found.ref);
-                        } else {
-                            addedParameters.push(undefined);
-                        }
+                Parameters.forEach(parameter => {
+                    let found = CanAddName.find(can => {
+                        return can.name == parameter;
                     });
 
-                    let commandObj = new (Function.prototype.bind.apply(command.comp, [null].concat(addedParameters)));
+                    if (typeof found !== 'undefined') {
+                        addedParameters.push(found.ref);
+                    } else {
+                        addedParameters.push(undefined);
+                    }
+                });
 
-                    commands.push(commandObj);
-                    CanAddName.push({ ref: commandObj, name: command.comp.name });
-                }
+                let commandObj = new (Function.prototype.bind.apply(command.comp, [null].concat(addedParameters)));
+
+                commands.push(commandObj);
+                CanAddName.push({ ref: commandObj, name: command.comp.name });
             });
 
             if (icModule.options.useCommandsManager == true) {
