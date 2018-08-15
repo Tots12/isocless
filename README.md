@@ -16,8 +16,7 @@ npm install isocless
     "module": "commonjs",
     "target": "es6",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "declaration": true
+    "emitDecoratorMetadata": true
   },
 }
 ```
