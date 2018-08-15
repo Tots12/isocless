@@ -58,7 +58,7 @@ npm install isocless
             console.log("Bot's ready!");
         }
 
-        icOnMessage(message: Message) {
+        icOnMessage(message: Discord.Message) {
             this.commandsManager.run(message);
         }
     }
