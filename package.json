@@ -1,0 +1,19 @@
+{
+  "name": "isocless",
+  "version": "1.0.4",
+  "description": "One Framework for creating Discord Bots with TypeScript.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tots1",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "reflect-metadata": "^0.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^10.7.0",
+    "@types/reflect-metadata": "^0.1.0"
+  }
+}
