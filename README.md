@@ -8,6 +8,22 @@ npm install isocless
 
 ## Demo
 
+### Tsconfig example
+
+```JSON
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true
+  },
+}
+```
+
+### Code
+
 ```TypeScript
     import { IcModule, OnReady, OnMessage, CommandsManager } from 'isocless';
     import * as Discord from 'discord.js';
