@@ -29,16 +29,18 @@ class CommandsManager {
 exports.CommandsManager = CommandsManager;
 function getClassConstructorParameters(t) {
     let params = Reflect.getMetadata('design:paramtypes', t);
-    params.forEach((param, i) => {
-        params[i] = param.toString()
-            .split("{")[0]
-            .split(" ")[1];
-        if (params[i].includes("(") && params[i].includes(")")) {
+    if (params) {
+        params.forEach((param, i) => {
             params[i] = param.toString()
-                .split("(")[0]
-                .split("function ")[1];
-        }
-    });
+                .split("{")[0]
+                .split(" ")[1];
+            if (params[i].includes("(") && params[i].includes(")")) {
+                params[i] = param.toString()
+                    .split("(")[0]
+                    .split("function ")[1];
+            }
+        });
+    }
     return params;
 }
 exports.IcModule = (icModule) => {
