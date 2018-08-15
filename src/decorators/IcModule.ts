@@ -62,8 +62,10 @@ function getClassConstructorParameters(t: object): string[] {
     return params;
 }
 
-export interface Commands {
-    all: string[];
+export class Commands {
+    constructor(
+        public all: string[]
+    ) { }
 }
 
 export const IcModule = (icModule: IcModule) => {

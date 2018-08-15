@@ -41,6 +41,12 @@ function getClassConstructorParameters(t) {
     });
     return params;
 }
+class Commands {
+    constructor(all) {
+        this.all = all;
+    }
+}
+exports.Commands = Commands;
 exports.IcModule = (icModule) => {
     return (target) => {
         let client = new Discord.Client();

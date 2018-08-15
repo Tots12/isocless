@@ -25,7 +25,8 @@ export declare class CommandsManager {
     constructor(client: Discord.Client, commandsRef: any[], commandsNames: string[], icModule: IcModule);
     run(message: Discord.Message): void;
 }
-export interface Commands {
+export declare class Commands {
     all: string[];
+    constructor(all: string[]);
 }
 export declare const IcModule: (icModule: IcModule) => (target: Type<object>) => void;
