@@ -105,12 +105,10 @@ export const IcModule = (icModule: IcModule) => {
             let cmdNames: string[] = [];
 
             icModule.commands.forEach(command => {
-                console.log(command.info.name);
-
                 cmdNames.push(command.info.name);
             });
 
-            CanAddName.push({ name: "Object", ref: { all: cmdNames } });
+            CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
 
             icModule.commands.forEach(command => {
                 let Parameters: string[] = getClassConstructorParameters(command.comp);
