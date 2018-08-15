@@ -39,7 +39,7 @@ npm install isocless
     }
 
     @IcModule({
-        commands: [],
+        commands: [{ info: { name: 'ping' }, comp: PingCommand }],
         providers: [],
         options: {
             useCommandsManager: true,
