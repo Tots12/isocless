@@ -70,9 +70,10 @@ exports.IcModule = (icModule) => {
             });
             let cmdNames = [];
             icModule.commands.forEach(command => {
+                console.log(command.info.name);
                 cmdNames.push(command.info.name);
             });
-            CanAddName.push({ name: "Commands", ref: cmdNames });
+            CanAddName.push({ name: "Object", ref: { all: cmdNames } });
             icModule.commands.forEach(command => {
                 let Parameters = getClassConstructorParameters(command.comp);
                 let addedParameters = [];
