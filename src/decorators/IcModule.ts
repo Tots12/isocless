@@ -1,74 +1,10 @@
 import * as Discord from 'discord.js';
-import 'reflect-metadata';
 
-import { CanAdd } from '../Interfaces';
-import { Type } from './type';
+import { CanAdd, IIcModule } from '../Interfaces';
+import { CommandsManager } from '../classes';
+import { gccp, Type } from '../util';
 
-export interface Command {
-    info: { name: string; };
-    comp: Type<any>;
-}
-
-export interface IcModule {
-    commands: Command[];
-    providers: Type<any>[];
-    token: string;
-    prefix: string;
-    options: { useCommandsManager: boolean; botUseCommands: boolean };
-}
-
-export class CommandsManager {
-    constructor(
-        private client: Discord.Client,
-        private commandsRef: any[],
-        private commandsNames: string[],
-        private icModule: IcModule
-    ) { }
-
-    run(message: Discord.Message) {
-        if (this.icModule.options.botUseCommands == false && message.author.id === this.client.user.id) return;
-
-        if (!message.content.includes(this.icModule.prefix)) return;
-
-        let args: string[] = message.content
-            .substring(this.icModule.prefix.length)
-            .split(" ");
-
-        if (this.commandsNames.length < 1 || typeof this.commandsNames == 'undefined') return;
-
-        this.commandsNames.forEach((command, i) => {
-            if (args[0] === command) {
-                this.commandsRef[i].icRun(message, args.splice(0, 1));
-            }
-        });
-    }
-}
-
-function getClassConstructorParameters(t: object): string[] {
-    let params: string[] = Reflect.getMetadata('design:paramtypes', t);
-
-    params.forEach((param, i) => {
-        params[i] = param.toString()
-            .split("{")[0]
-            .split(" ")[1];
-
-        if (params[i].includes("(") && params[i].includes(")")) {
-            params[i] = param.toString()
-                .split("(")[0]
-                .split("function ")[1];
-        }
-    });
-
-    return params;
-}
-
-export class Commands {
-    constructor(
-        public all: string[]
-    ) { }
-}
-
-export const IcModule = (icModule: IcModule) => {
+export const IcModule = (icModule: IIcModule) => {
     return (target: Type<object>) => {
         let client: Discord.Client = new Discord.Client();
 
@@ -81,7 +17,7 @@ export const IcModule = (icModule: IcModule) => {
             let commands: any[] = [];
 
             icModule.providers.forEach(provider => {
-                let Parameters: string[] = getClassConstructorParameters(provider);
+                let Parameters: string[] = gccp(provider);
                 let addedParameters: any[] = [];
 
                 Parameters.forEach(parameter => {
@@ -111,7 +47,7 @@ export const IcModule = (icModule: IcModule) => {
             CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
 
             icModule.commands.forEach(command => {
-                let Parameters: string[] = getClassConstructorParameters(command.comp);
+                let Parameters: string[] = gccp(command.comp);
                 let addedParameters: any[] = [];
 
                 Parameters.forEach(parameter => {
@@ -142,7 +78,7 @@ export const IcModule = (icModule: IcModule) => {
                 CanAddName.push({ ref: new CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
             }
 
-            let Parameters: string[] = getClassConstructorParameters(target);
+            let Parameters: string[] = gccp(target);
             let addedParameters: any[] = [];
 
             Parameters.forEach(parameter => {

@@ -1,52 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Discord = require("discord.js");
-require("reflect-metadata");
-class CommandsManager {
-    constructor(client, commandsRef, commandsNames, icModule) {
-        this.client = client;
-        this.commandsRef = commandsRef;
-        this.commandsNames = commandsNames;
-        this.icModule = icModule;
-    }
-    run(message) {
-        if (this.icModule.options.botUseCommands == false && message.author.id === this.client.user.id)
-            return;
-        if (!message.content.includes(this.icModule.prefix))
-            return;
-        let args = message.content
-            .substring(this.icModule.prefix.length)
-            .split(" ");
-        if (this.commandsNames.length < 1 || typeof this.commandsNames == 'undefined')
-            return;
-        this.commandsNames.forEach((command, i) => {
-            if (args[0] === command) {
-                this.commandsRef[i].icRun(message, args.splice(0, 1));
-            }
-        });
-    }
-}
-exports.CommandsManager = CommandsManager;
-function getClassConstructorParameters(t) {
-    let params = Reflect.getMetadata('design:paramtypes', t);
-    params.forEach((param, i) => {
-        params[i] = param.toString()
-            .split("{")[0]
-            .split(" ")[1];
-        if (params[i].includes("(") && params[i].includes(")")) {
-            params[i] = param.toString()
-                .split("(")[0]
-                .split("function ")[1];
-        }
-    });
-    return params;
-}
-class Commands {
-    constructor(all) {
-        this.all = all;
-    }
-}
-exports.Commands = Commands;
+const classes_1 = require("../classes");
+const util_1 = require("../util");
 exports.IcModule = (icModule) => {
     return (target) => {
         let client = new Discord.Client();
@@ -57,7 +13,7 @@ exports.IcModule = (icModule) => {
             let providers = [];
             let commands = [];
             icModule.providers.forEach(provider => {
-                let Parameters = getClassConstructorParameters(provider);
+                let Parameters = util_1.gccp(provider);
                 let addedParameters = [];
                 Parameters.forEach(parameter => {
                     let found = CanAddName.find(can => {
@@ -80,7 +36,7 @@ exports.IcModule = (icModule) => {
             });
             CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
             icModule.commands.forEach(command => {
-                let Parameters = getClassConstructorParameters(command.comp);
+                let Parameters = util_1.gccp(command.comp);
                 let addedParameters = [];
                 Parameters.forEach(parameter => {
                     let found = CanAddName.find(can => {
@@ -102,9 +58,9 @@ exports.IcModule = (icModule) => {
                 icModule.commands.forEach(command => {
                     cNames.push(command.info.name);
                 });
-                CanAddName.push({ ref: new CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
+                CanAddName.push({ ref: new classes_1.CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
             }
-            let Parameters = getClassConstructorParameters(target);
+            let Parameters = util_1.gccp(target);
             let addedParameters = [];
             Parameters.forEach(parameter => {
                 let found = CanAddName.find(can => {
