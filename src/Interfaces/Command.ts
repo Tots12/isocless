@@ -1,6 +1,7 @@
 import { Type } from '../util';
+import { Info } from '.';
 
 export interface Command {
-    info: { name: string; };
+    info: Info;
     comp: Type<any>;
 }

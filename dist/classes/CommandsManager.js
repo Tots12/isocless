@@ -19,7 +19,7 @@ class CommandsManager {
             return;
         this.commandsNames.forEach((command, i) => {
             if (args[0] === command) {
-                this.commandsRef[i].icRun(message, args.splice(0, 1));
+                this.commandsRef[i].icRun(message, args.slice(1));
             }
         });
     }

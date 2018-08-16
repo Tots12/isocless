@@ -1,4 +1,5 @@
+import { Info } from "../Interfaces";
 export declare class Commands {
-    all: string[];
-    constructor(all: string[]);
+    all: Info[];
+    constructor(all: Info[]);
 }

@@ -1,7 +1,7 @@
 import * as Discord from 'discord.js';
 
-import { CanAdd, IIcModule } from '../Interfaces';
-import { CommandsManager } from '../classes';
+import { CanAdd, IIcModule, Info } from '../Interfaces';
+import { CommandsManager, Commands } from '../classes';
 import { gccp, Type } from '../util';
 
 export const IcModule = (icModule: IIcModule) => {
@@ -38,13 +38,13 @@ export const IcModule = (icModule: IIcModule) => {
                 CanAddName.push({ ref: providerObj, name: provider.name });
             });
 
-            let cmdNames: string[] = [];
+            let cmdNames: Info[] = [];
 
             icModule.commands.forEach(command => {
-                cmdNames.push(command.info.name);
+                cmdNames.push(command.info);
             });
 
-            CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
+            CanAddName.push({ name: "Commands", ref: new Commands(cmdNames) });
 
             icModule.commands.forEach(command => {
                 let Parameters: string[] = gccp(command.comp);

@@ -32,9 +32,9 @@ exports.IcModule = (icModule) => {
             });
             let cmdNames = [];
             icModule.commands.forEach(command => {
-                cmdNames.push(command.info.name);
+                cmdNames.push(command.info);
             });
-            CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
+            CanAddName.push({ name: "Commands", ref: new classes_1.Commands(cmdNames) });
             icModule.commands.forEach(command => {
                 let Parameters = util_1.gccp(command.comp);
                 let addedParameters = [];

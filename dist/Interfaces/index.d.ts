@@ -4,3 +4,4 @@ export * from './onReady';
 export * from './IcRun';
 export * from './Command';
 export * from './IIcModule';
+export * from './Info';
