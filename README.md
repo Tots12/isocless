@@ -16,7 +16,7 @@ npm install isocless
 
 ## Demo
 
-###Tsconfig example
+### Tsconfig example
 
 ```JSON
 {
