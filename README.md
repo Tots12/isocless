@@ -38,7 +38,7 @@ class PingCommand implements Run {
 }
  
 @IcModule({
-  commands: [],
+  commands: [{ info: { name: 'ping', description: 'Show the ping of the bot client.' }, comp: PingCommand  }],
   providers: [],
   options: {
     useCommandsManager: true,
