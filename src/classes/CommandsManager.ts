@@ -1,13 +1,13 @@
 import * as Discord from 'discord.js';
 
-import { IIcModule } from '../Interfaces/IIcModule';
+import { IIcBot } from '../Interfaces/IIcBot';
 
 export class CommandsManager {
     constructor(
         private client: Discord.Client,
         private commandsRef: any[],
         private commandsNames: string[],
-        private icModule: IIcModule
+        private icModule: IIcBot
     ) { }
 
     run(message: Discord.Message) {

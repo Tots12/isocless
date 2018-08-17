@@ -1,3 +1,3 @@
-import { IIcModule } from '../Interfaces';
+import { IIcBot } from '../Interfaces';
 import { Type } from '../util';
-export declare const IcBot: (icModule: IIcModule) => (target: Type<object>) => void;
+export declare const IcBot: (icModule: IIcBot) => (target: Type<object>) => void;

@@ -1,10 +1,10 @@
 import * as Discord from 'discord.js';
 
-import { CanAdd, IIcModule, Info } from '../Interfaces';
+import { CanAdd, IIcBot, Info } from '../Interfaces';
 import { CommandsManager, Commands } from '../classes';
 import { gccp, Type } from '../util';
 
-export const IcBot = (icModule: IIcModule) => {
+export const IcBot = (icModule: IIcBot) => {
     return (target: Type<object>) => {
         let client: Discord.Client = new Discord.Client();
 
@@ -16,80 +16,116 @@ export const IcBot = (icModule: IIcModule) => {
             let providers: any[] = [];
             let commands: any[] = [];
 
-            icModule.providers.forEach(provider => {
-                let Parameters: string[] = gccp(provider);
-                let addedParameters: any[] = [];
+            if (icModule.imports) {
+                icModule.imports.forEach(importClass => {
+                    let import_ = new importClass();
 
-                Parameters.forEach(parameter => {
-                    let found = CanAddName.find(can => {
-                        return can.name == parameter;
+                    import_["iicImport"].providers.forEach((provider: Type<any>) => {
+                        let Parameters: string[] = gccp(provider);
+                        let addedParameters: any[] = [];
+
+                        Parameters.forEach(parameter => {
+                            let found = CanAddName.find(can => {
+                                return can.name == parameter;
+                            });
+
+                            if (typeof found !== 'undefined') {
+                                addedParameters.push(found.ref);
+                            } else {
+                                addedParameters.push(undefined);
+                            }
+                        });
+
+                        let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)))
+
+                        providers.push(providerObj);
+                        CanAddName.push({ ref: providerObj, name: provider.name });
                     });
 
-                    if (typeof found !== 'undefined') {
-                        addedParameters.push(found.ref);
-                    } else {
-                        addedParameters.push(undefined);
-                    }
+                    import_["iicImport"].imports.forEach((import__: Type<any>) => {
+                        import_["imports"].push(new import__());
+                    });
                 });
+            }
 
-                let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)))
+            if (icModule.providers) {
+                icModule.providers.forEach(provider => {
+                    let Parameters: string[] = gccp(provider);
+                    let addedParameters: any[] = [];
 
-                providers.push(providerObj);
-                CanAddName.push({ ref: providerObj, name: provider.name });
-            });
+                    Parameters.forEach(parameter => {
+                        let found = CanAddName.find(can => {
+                            return can.name == parameter;
+                        });
 
-            icModule.commands.forEach(command => {
-                let Parameters: string[] = gccp(command);
-                let addedParameters: any[] = [];
-
-                Parameters.forEach(parameter => {
-                    let found = CanAddName.find(can => {
-                        return can.name == parameter;
+                        if (typeof found !== 'undefined') {
+                            addedParameters.push(found.ref);
+                        } else {
+                            addedParameters.push(undefined);
+                        }
                     });
 
-                    if (typeof found !== 'undefined') {
-                        addedParameters.push(found.ref);
-                    } else {
-                        addedParameters.push(undefined);
-                    }
+                    let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)))
+
+                    providers.push(providerObj);
+                    CanAddName.push({ ref: providerObj, name: provider.name });
                 });
+            }
 
-                let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
+            if (icModule.commands) {
+                icModule.commands.forEach(command => {
+                    let Parameters: string[] = gccp(command);
+                    let addedParameters: any[] = [];
 
-                commands.push(commandObj);
-            });
+                    Parameters.forEach(parameter => {
+                        let found = CanAddName.find(can => {
+                            return can.name == parameter;
+                        });
 
-            let cmdNames: Info[] = [];
-
-            commands.forEach(command => {
-                cmdNames.push(command["info"]);
-            });
-
-            CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
-
-            icModule.commands.forEach((command, i) => {
-                let Parameters: string[] = gccp(command);
-                let addedParameters: any[] = [];
-
-                Parameters.forEach(parameter => {
-                    let found = CanAddName.find(can => {
-                        return can.name == parameter;
+                        if (typeof found !== 'undefined') {
+                            addedParameters.push(found.ref);
+                        } else {
+                            addedParameters.push(undefined);
+                        }
                     });
 
-                    if (typeof found !== 'undefined') {
-                        addedParameters.push(found.ref);
-                    } else {
-                        addedParameters.push(undefined);
-                    }
-                });
-
-                if (commands[i]["isHelpCommand"] == true) {
                     let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
 
-                    CanAddName.push({ name: command.name, ref: commandObj });
-                    commands[i] = commandObj;
-                }
-            });
+                    commands.push(commandObj);
+                });
+
+                let cmdNames: Info[] = [];
+
+                commands.forEach(command => {
+                    cmdNames.push(command["info"]);
+                });
+
+                CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
+
+                icModule.commands.forEach((command, i) => {
+                    let Parameters: string[] = gccp(command);
+                    let addedParameters: any[] = [];
+
+                    Parameters.forEach(parameter => {
+                        let found = CanAddName.find(can => {
+                            return can.name == parameter;
+                        });
+
+                        if (typeof found !== 'undefined') {
+                            addedParameters.push(found.ref);
+                        } else {
+                            addedParameters.push(undefined);
+                        }
+                    });
+
+                    if (commands[i]["isHelpCommand"] == true) {
+                        let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
+
+                        CanAddName.push({ name: command.name, ref: commandObj });
+                        commands[i] = commandObj;
+                    }
+                });
+            }
 
             if (icModule.options.useCommandsManager == true) {
                 let cNames: string[] = [];
