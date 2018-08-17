@@ -23,7 +23,7 @@ npm install isocless
 
 ```TypeScript
 import { IcModule, OnReady, OnMessage, CommandsManager, IcCommand } from 'isocless';
-import * as Discord from 'discord.js';
+import * as Discord from 'discord.js'
  
 @IcCommand({
   info: {
