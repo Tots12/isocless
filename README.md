@@ -14,8 +14,7 @@ npm install isocless
     "module": "commonjs",
     "target": "es6",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "declaration": true
+    "emitDecoratorMetadata": true
   },
 }
 ```
@@ -26,7 +25,12 @@ npm install isocless
 import { IcModule, OnReady, OnMessage, CommandsManager, IcCommand } from 'isocless';
 import * as Discord from 'discord.js';
  
-@IcCommand()
+@IcCommand({
+  info: {
+    name: 'ping',
+    description: 'Show the ping of the bot client'
+  }
+})
 class PingCommand implements Run {
   constructor(
     private client: Discord.Client
@@ -36,9 +40,9 @@ class PingCommand implements Run {
     message.reply(`:ping_pong: Pong! ${Math.floor(this.client.ping)}`);
   }
 }
- 
+
 @IcModule({
-  commands: [{ info: { name: 'ping', description: 'Show the ping of the bot client.' }, comp: PingCommand  }],
+  commands: [PingCommand],
   providers: [],
   options: {
     useCommandsManager: true,
