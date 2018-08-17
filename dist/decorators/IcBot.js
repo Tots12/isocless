@@ -34,7 +34,15 @@ exports.IcBot = (icModule) => {
                 let Parameters = util_1.gccp(command);
                 let addedParameters = [];
                 Parameters.forEach(parameter => {
-                    addedParameters.push(undefined);
+                    let found = CanAddName.find(can => {
+                        return can.name == parameter;
+                    });
+                    if (typeof found !== 'undefined') {
+                        addedParameters.push(found.ref);
+                    }
+                    else {
+                        addedParameters.push(undefined);
+                    }
                 });
                 let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
                 commands.push(commandObj);
