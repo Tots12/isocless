@@ -4,11 +4,13 @@ export function gccp(t: object): string[] {
     let params: string[] = Reflect.getMetadata('design:paramtypes', t);
 
     params.forEach((param, i) => {
-        params[i] = param.toString()
-            .split("{")[0]
-            .split(" ")[1];
+        if (param.toString().includes("{") && param.toString().includes(" ")) {
+            params[i] = param.toString()
+                .split("{")[0]
+                .split(" ")[1];
+        }
 
-        if (params[i].includes("(") && params[i].includes(")")) {
+        if (params[i].toString().includes("(") && params[i].toString().includes(")")) {
             params[i] = param.toString()
                 .split("(")[0]
                 .split("function ")[1];
