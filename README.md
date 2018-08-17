@@ -12,7 +12,6 @@ npm install isocless
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
@@ -21,10 +20,11 @@ npm install isocless
 
 ### Code
 
+#### Ping Command
 ```TypeScript
-import { IcModule, OnReady, OnMessage, CommandsManager, IcCommand } from 'isocless';
+import { IcCommand } from 'isocless';
 import * as Discord from 'discord.js';
- 
+
 @IcCommand({
   info: {
     name: 'ping',
@@ -40,6 +40,12 @@ class PingCommand implements Run {
     message.reply(`:ping_pong: Pong! ${Math.floor(this.client.ping)}`);
   }
 }
+```
+
+#### Main Module
+```TypeScript
+import { IcModule, OnReady, OnMessage, CommandsManager } from 'isocless';
+import * as Discord from 'discord.js';
 
 @IcModule({
   commands: [PingCommand],
