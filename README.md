@@ -50,6 +50,7 @@ import * as Discord from 'discord.js';
 @IcModule({
   commands: [PingCommand],
   providers: [],
+  imports: [],
   options: {
     useCommandsManager: true,
     botUseCommands: false
