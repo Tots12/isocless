@@ -20,28 +20,6 @@ npm install isocless
 
 ### Code
 
-#### Ping Command
-```TypeScript
-import { IcCommand } from 'isocless';
-import * as Discord from 'discord.js';
-
-@IcCommand({
-  info: {
-    name: 'ping',
-    description: 'Show the ping of the bot client'
-  }
-})
-class PingCommand implements Run {
-  constructor(
-    private client: Discord.Client
-  ) { }
- 
-  icRun(message: Discord.Message, args: string[]) {
-    message.reply(`:ping_pong: Pong! ${Math.floor(this.client.ping)}`);
-  }
-}
-```
-
 #### Main Module
 ```TypeScript
 import { IcBot, OnReady, OnMessage, CommandsManager } from 'isocless';
@@ -68,6 +46,28 @@ class BotModule implements OnReady, OnMessage {
  
   icOnMessage(message: Message) {
     this.commandsManager.run(message);
+  }
+}
+```
+
+#### Ping Command
+```TypeScript
+import { IcCommand, Run } from 'isocless';
+import * as Discord from 'discord.js';
+
+@IcCommand({
+  info: {
+    name: 'ping',
+    description: 'Show the ping of the bot client'
+  }
+})
+class PingCommand implements Run {
+  constructor(
+    private client: Discord.Client
+  ) { }
+ 
+  icRun(message: Discord.Message, args: string[]) {
+    message.reply(`:ping_pong: Pong! ${Math.floor(this.client.ping)}`);
   }
 }
 ```
