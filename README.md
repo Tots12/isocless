@@ -44,10 +44,10 @@ class PingCommand implements Run {
 
 #### Main Module
 ```TypeScript
-import { IcModule, OnReady, OnMessage, CommandsManager } from 'isocless';
+import { IcBot, OnReady, OnMessage, CommandsManager } from 'isocless';
 import * as Discord from 'discord.js';
 
-@IcModule({
+@IcBot({
   commands: [PingCommand],
   providers: [],
   imports: [],
