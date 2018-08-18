@@ -44,7 +44,7 @@ class BotModule implements OnReady, OnMessage {
     // this.commandsManager.botUseCommands = true;
   }
  
-  icOnMessage(message: Message) {
+  icOnMessage(message: Discord.Message) {
     this.commandsManager.run(message);
   }
 }
