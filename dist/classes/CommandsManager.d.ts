@@ -5,6 +5,7 @@ export declare class CommandsManager {
     private commandsRef;
     private commandsNames;
     private icModule;
+    botUseCommands: boolean;
     constructor(client: Discord.Client, commandsRef: any[], commandsNames: string[], icModule: IIcBot);
     run(message: Discord.Message): void;
 }

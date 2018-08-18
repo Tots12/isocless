@@ -16,6 +16,37 @@ export const IcBot = (icModule: IIcBot) => {
             let providers: any[] = [];
             let commands: any[] = [];
 
+            if (icModule.commands) {
+                icModule.commands.forEach(command => {
+                    let Parameters: string[] = gccp(command);
+                    let addedParameters: any[] = [];
+
+                    Parameters.forEach(parameter => {
+                        let found = CanAddName.find(can => {
+                            return can.name == parameter;
+                        });
+
+                        if (typeof found !== 'undefined') {
+                            addedParameters.push(found.ref);
+                        } else {
+                            addedParameters.push(undefined);
+                        }
+                    });
+
+                    let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
+
+                    commands.push(commandObj);
+                });
+
+                let cmdNames: Info[] = [];
+
+                commands.forEach(command => {
+                    cmdNames.push(command["info"]);
+                });
+
+                CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
+            }
+
             if (icModule.imports) {
                 icModule.imports.forEach(importClass => {
                     let import_ = new importClass();
@@ -73,35 +104,6 @@ export const IcBot = (icModule: IIcBot) => {
             }
 
             if (icModule.commands) {
-                icModule.commands.forEach(command => {
-                    let Parameters: string[] = gccp(command);
-                    let addedParameters: any[] = [];
-
-                    Parameters.forEach(parameter => {
-                        let found = CanAddName.find(can => {
-                            return can.name == parameter;
-                        });
-
-                        if (typeof found !== 'undefined') {
-                            addedParameters.push(found.ref);
-                        } else {
-                            addedParameters.push(undefined);
-                        }
-                    });
-
-                    let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
-
-                    commands.push(commandObj);
-                });
-
-                let cmdNames: Info[] = [];
-
-                commands.forEach(command => {
-                    cmdNames.push(command["info"]);
-                });
-
-                CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
-
                 icModule.commands.forEach((command, i) => {
                     let Parameters: string[] = gccp(command);
                     let addedParameters: any[] = [];
@@ -127,15 +129,14 @@ export const IcBot = (icModule: IIcBot) => {
                 });
             }
 
-            if (icModule.options.useCommandsManager == true) {
-                let cNames: string[] = [];
+            let cNames: string[] = [];
 
-                commands.forEach(command => {
-                    cNames.push(command["info"].name);
-                });
+            commands.forEach(command => {
+                cNames.push(command["info"].name);
+            });
 
-                CanAddName.push({ ref: new CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
-            }
+            CanAddName.push({ ref: new CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
+
 
             let Parameters: string[] = gccp(target);
             let addedParameters: any[] = [];

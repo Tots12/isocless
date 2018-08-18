@@ -6,10 +6,12 @@ class CommandsManager {
         this.commandsRef = commandsRef;
         this.commandsNames = commandsNames;
         this.icModule = icModule;
+        this.botUseCommands = false;
     }
     run(message) {
-        if (this.icModule.options.botUseCommands == false && message.author.id === this.client.user.id)
-            return;
+        if (this.botUseCommands == false)
+            if (message.author.id === this.client.user.id)
+                return;
         if (!message.content.includes(this.icModule.prefix))
             return;
         let args = message.content

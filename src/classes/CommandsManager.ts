@@ -3,6 +3,8 @@ import * as Discord from 'discord.js';
 import { IIcBot } from '../Interfaces/IIcBot';
 
 export class CommandsManager {
+    botUseCommands: boolean = false;
+
     constructor(
         private client: Discord.Client,
         private commandsRef: any[],
@@ -11,7 +13,8 @@ export class CommandsManager {
     ) { }
 
     run(message: Discord.Message) {
-        if (this.icModule.options.botUseCommands == false && message.author.id === this.client.user.id) return;
+        if (this.botUseCommands == false) 
+            if (message.author.id === this.client.user.id) return;
 
         if (!message.content.includes(this.icModule.prefix)) return;
 

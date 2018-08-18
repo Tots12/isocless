@@ -12,6 +12,30 @@ exports.IcBot = (icModule) => {
             ];
             let providers = [];
             let commands = [];
+            if (icModule.commands) {
+                icModule.commands.forEach(command => {
+                    let Parameters = util_1.gccp(command);
+                    let addedParameters = [];
+                    Parameters.forEach(parameter => {
+                        let found = CanAddName.find(can => {
+                            return can.name == parameter;
+                        });
+                        if (typeof found !== 'undefined') {
+                            addedParameters.push(found.ref);
+                        }
+                        else {
+                            addedParameters.push(undefined);
+                        }
+                    });
+                    let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
+                    commands.push(commandObj);
+                });
+                let cmdNames = [];
+                commands.forEach(command => {
+                    cmdNames.push(command["info"]);
+                });
+                CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
+            }
             if (icModule.imports) {
                 icModule.imports.forEach(importClass => {
                     let import_ = new importClass();
@@ -59,28 +83,6 @@ exports.IcBot = (icModule) => {
                 });
             }
             if (icModule.commands) {
-                icModule.commands.forEach(command => {
-                    let Parameters = util_1.gccp(command);
-                    let addedParameters = [];
-                    Parameters.forEach(parameter => {
-                        let found = CanAddName.find(can => {
-                            return can.name == parameter;
-                        });
-                        if (typeof found !== 'undefined') {
-                            addedParameters.push(found.ref);
-                        }
-                        else {
-                            addedParameters.push(undefined);
-                        }
-                    });
-                    let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
-                    commands.push(commandObj);
-                });
-                let cmdNames = [];
-                commands.forEach(command => {
-                    cmdNames.push(command["info"]);
-                });
-                CanAddName.push({ name: "Commands", ref: { all: cmdNames } });
                 icModule.commands.forEach((command, i) => {
                     let Parameters = util_1.gccp(command);
                     let addedParameters = [];
@@ -102,13 +104,11 @@ exports.IcBot = (icModule) => {
                     }
                 });
             }
-            if (icModule.options.useCommandsManager == true) {
-                let cNames = [];
-                commands.forEach(command => {
-                    cNames.push(command["info"].name);
-                });
-                CanAddName.push({ ref: new classes_1.CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
-            }
+            let cNames = [];
+            commands.forEach(command => {
+                cNames.push(command["info"].name);
+            });
+            CanAddName.push({ ref: new classes_1.CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
             let Parameters = util_1.gccp(target);
             let addedParameters = [];
             Parameters.forEach(parameter => {

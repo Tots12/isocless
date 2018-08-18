@@ -5,8 +5,4 @@ export interface IIcBot {
     imports?: Type<any>[];
     token: string;
     prefix: string;
-    options: {
-        useCommandsManager: boolean;
-        botUseCommands: boolean;
-    };
 }
