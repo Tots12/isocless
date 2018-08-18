@@ -21,6 +21,9 @@ class CommandsManager {
             return;
         this.commandsNames.forEach((command, i) => {
             if (args[0] === command) {
+                if (this.commandsRef[i]["canUseInPrivate"] == false)
+                    if (message.guild === null)
+                        return;
                 this.commandsRef[i].icRun(message, args.slice(1));
             }
         });
