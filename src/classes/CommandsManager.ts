@@ -26,7 +26,7 @@ export class CommandsManager {
 
         this.commandsNames.forEach((command, i) => {
             if (args[0] === command) {
-                if (this.commandsRef[i]["canUseInPrivate"] == false)
+                if (!this.commandsRef[i]["canUseInPrivate"] == true)
                     if (message.guild === null)
                         return;
 
