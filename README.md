@@ -51,10 +51,6 @@ import * as Discord from 'discord.js';
   commands: [PingCommand],
   providers: [],
   imports: [],
-  options: {
-    useCommandsManager: true,
-    botUseCommands: false
-  },
   token: "Your bot token here",
   prefix: "!"
 })
@@ -66,6 +62,8 @@ class BotModule implements OnReady, OnMessage {
  
   icOnReady() {
     console.log("Bot's ready!");
+    
+    // this.commandsManager.botUseCommands = true;
   }
  
   icOnMessage(message: Message) {
