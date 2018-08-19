@@ -22,31 +22,31 @@ npm install isocless
 
 #### Main Module
 ```TypeScript
-import { IcBot, OnReady, OnMessage, CommandsManager } from 'isocless';
-import * as Discord from 'discord.js';
+import { OnReady, OnMessage, IcBot, CommandsModule, CommandsManager } from 'isocless';
+
+import { Message } from 'discord.js';
+
+import { PingCommand } from './ping.command';
 
 @IcBot({
-  commands: [PingCommand],
-  providers: [],
-  imports: [],
-  token: "Your bot token here",
-  prefix: "!"
+    commands: [PingCommand],
+    providers: [],
+    imports: [CommandsModule],
+    prefix: '#',
+    token: 'Your bot token here!'
 })
-class BotModule implements OnReady, OnMessage {
-  constructor(
-    private commandsManager: CommandsManager,
-    private client: Discord.Client
-  ) { }
- 
-  icOnReady() {
-    console.log("Bot's ready!");
-    
-    // this.commandsManager.botUseCommands = true;
-  }
- 
-  icOnMessage(message: Discord.Message) {
-    this.commandsManager.run(message);
-  }
+export class Bot implements OnReady, OnMessage {
+    constructor(
+        private commandsManager: CommandsManager
+    ) { }
+
+    icOnReady() {
+        console.log("Bot's ready!");
+    }
+
+    icOnMessage(message: Message) {
+        this.commandsManager.run(message);
+    }
 }
 ```
 
@@ -61,7 +61,7 @@ import * as Discord from 'discord.js';
     description: 'Show the ping of the bot client'
   }
 })
-class PingCommand implements Run {
+export class PingCommand implements Run {
   constructor(
     private client: Discord.Client
   ) { }
