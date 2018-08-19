@@ -4,7 +4,6 @@ import { IIcCommand } from '../Interfaces';
 export function IcCommand(iicCommand: IIcCommand) {
     return (target: Type<object>) => {
         target.prototype.info = iicCommand.info;
-        target.prototype.isHelpCommand = iicCommand.isHelpCommand;
         target.prototype.canUseInPrivate = iicCommand.canUseInPrivate;
     }
 }

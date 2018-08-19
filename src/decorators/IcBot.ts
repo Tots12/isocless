@@ -1,7 +1,7 @@
 import * as Discord from 'discord.js';
 
 import { CanAdd, IIcBot, Info } from '../Interfaces';
-import { CommandsManager, Commands } from '../classes';
+import { Commands } from '../classes';
 import { gccp, Type } from '../util';
 
 export const IcBot = (icModule: IIcBot) => {
@@ -10,7 +10,8 @@ export const IcBot = (icModule: IIcBot) => {
 
         client.login(icModule.token).then(() => {
             let CanAddName: CanAdd[] = [
-                { ref: client, name: "Client" }
+                { ref: client, name: "Client" },
+                { ref: new IIcBot(icModule.token, icModule.prefix, icModule.commands, icModule.imports, icModule.providers), name: "IIcBot" }
             ];
 
             let providers: any[] = [];
@@ -51,31 +52,39 @@ export const IcBot = (icModule: IIcBot) => {
                 icModule.imports.forEach(importClass => {
                     let import_ = new importClass();
 
-                    import_["iicImport"].providers.forEach((provider: Type<any>) => {
-                        let Parameters: string[] = gccp(provider);
-                        let addedParameters: any[] = [];
-
-                        Parameters.forEach(parameter => {
-                            let found = CanAddName.find(can => {
-                                return can.name == parameter;
+                    if (!import_["iicImport"].onlyForBot == true) {
+                        import_["iicImport"].providers.forEach((provider: Type<any>, i: number) => {
+                            let Parameters: string[] = gccp(provider);
+                            let addedParameters: any[] = [];
+    
+                            Parameters.forEach(parameter => {
+                                let found = CanAddName.find(can => {
+                                    return can.name == parameter;
+                                });
+    
+                                let found_ = import_["providersParams"].find((can: CanAdd) => {
+                                    return can.name == parameter;
+                                });
+    
+                                if (typeof found !== 'undefined') {
+                                    addedParameters.push(found.ref);
+                                } else if (typeof found_ !== 'undefined') {
+                                    addedParameters.push(found_.ref);
+                                } else {
+                                    addedParameters.push(undefined);
+                                }
                             });
-
-                            if (typeof found !== 'undefined') {
-                                addedParameters.push(found.ref);
-                            } else {
-                                addedParameters.push(undefined);
-                            }
+    
+                            let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)))
+    
+                            providers.push(providerObj);
+                            CanAddName.push({ ref: providerObj, name: provider.name });
                         });
-
-                        let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)))
-
-                        providers.push(providerObj);
-                        CanAddName.push({ ref: providerObj, name: provider.name });
-                    });
-
-                    import_["iicImport"].imports.forEach((import__: Type<any>) => {
-                        import_["imports"].push(new import__());
-                    });
+    
+                        import_["iicImport"].imports.forEach((import__: Type<any>) => {
+                            import_["imports"].push(new import__());
+                        });
+                    }
                 });
             }
 
@@ -120,23 +129,59 @@ export const IcBot = (icModule: IIcBot) => {
                         }
                     });
 
-                    if (commands[i]["isHelpCommand"] == true) {
-                        let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
+                    let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
 
-                        CanAddName.push({ name: command.name, ref: commandObj });
-                        commands[i] = commandObj;
-                    }
+                    CanAddName.push({ name: command.name, ref: commandObj });
+                    commands[i] = commandObj;
+                });
+
+                let refI: number = CanAddName.indexOf(CanAddName.find(can => can.name === "Commands"));
+                let ref: Info[] = CanAddName[refI].ref.all;
+
+                ref.forEach((info, index) => {
+                    info.ref = commands[index];
                 });
             }
 
-            let cNames: string[] = [];
+            if (icModule.imports) {
+                icModule.imports.forEach(importClass => {
+                    let import_ = new importClass();
 
-            commands.forEach(command => {
-                cNames.push(command["info"].name);
-            });
-
-            CanAddName.push({ ref: new CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
-
+                    if (import_["iicImport"].onlyForBot == true) {
+                        import_["iicImport"].providers.forEach((provider: Type<any>, i: number) => {
+                            let Parameters: string[] = gccp(provider);
+                            let addedParameters: any[] = [];
+    
+                            Parameters.forEach(parameter => {
+                                let found = CanAddName.find(can => {
+                                    return can.name == parameter;
+                                });
+    
+                                let found_: CanAdd = import_["providersParams"].find((can: CanAdd) => {
+                                    return can.name == parameter;
+                                });
+    
+                                if (typeof found !== 'undefined') {
+                                    addedParameters.push(found.ref);
+                                } else if (typeof found_ !== 'undefined') {
+                                    addedParameters.push(found_.ref);
+                                } else {
+                                    addedParameters.push(undefined);
+                                }
+                            });
+    
+                            let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)))
+    
+                            providers.push(providerObj);
+                            CanAddName.push({ ref: providerObj, name: provider.name });
+                        });
+    
+                        import_["iicImport"].imports.forEach((import__: Type<any>) => {
+                            import_["imports"].push(new import__());
+                        });
+                    }
+                });
+            }
 
             let Parameters: string[] = gccp(target);
             let addedParameters: any[] = [];

@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Discord = require("discord.js");
-const classes_1 = require("../classes");
+const Interfaces_1 = require("../Interfaces");
 const util_1 = require("../util");
 exports.IcBot = (icModule) => {
     return (target) => {
         let client = new Discord.Client();
         client.login(icModule.token).then(() => {
             let CanAddName = [
-                { ref: client, name: "Client" }
+                { ref: client, name: "Client" },
+                { ref: new Interfaces_1.IIcBot(icModule.token, icModule.prefix, icModule.commands, icModule.imports, icModule.providers), name: "IIcBot" }
             ];
             let providers = [];
             let commands = [];
@@ -39,27 +40,35 @@ exports.IcBot = (icModule) => {
             if (icModule.imports) {
                 icModule.imports.forEach(importClass => {
                     let import_ = new importClass();
-                    import_["iicImport"].providers.forEach((provider) => {
-                        let Parameters = util_1.gccp(provider);
-                        let addedParameters = [];
-                        Parameters.forEach(parameter => {
-                            let found = CanAddName.find(can => {
-                                return can.name == parameter;
+                    if (!import_["iicImport"].onlyForBot == true) {
+                        import_["iicImport"].providers.forEach((provider, i) => {
+                            let Parameters = util_1.gccp(provider);
+                            let addedParameters = [];
+                            Parameters.forEach(parameter => {
+                                let found = CanAddName.find(can => {
+                                    return can.name == parameter;
+                                });
+                                let found_ = import_["providersParams"].find((can) => {
+                                    return can.name == parameter;
+                                });
+                                if (typeof found !== 'undefined') {
+                                    addedParameters.push(found.ref);
+                                }
+                                else if (typeof found_ !== 'undefined') {
+                                    addedParameters.push(found_.ref);
+                                }
+                                else {
+                                    addedParameters.push(undefined);
+                                }
                             });
-                            if (typeof found !== 'undefined') {
-                                addedParameters.push(found.ref);
-                            }
-                            else {
-                                addedParameters.push(undefined);
-                            }
+                            let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)));
+                            providers.push(providerObj);
+                            CanAddName.push({ ref: providerObj, name: provider.name });
                         });
-                        let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)));
-                        providers.push(providerObj);
-                        CanAddName.push({ ref: providerObj, name: provider.name });
-                    });
-                    import_["iicImport"].imports.forEach((import__) => {
-                        import_["imports"].push(new import__());
-                    });
+                        import_["iicImport"].imports.forEach((import__) => {
+                            import_["imports"].push(new import__());
+                        });
+                    }
                 });
             }
             if (icModule.providers) {
@@ -97,18 +106,50 @@ exports.IcBot = (icModule) => {
                             addedParameters.push(undefined);
                         }
                     });
-                    if (commands[i]["isHelpCommand"] == true) {
-                        let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
-                        CanAddName.push({ name: command.name, ref: commandObj });
-                        commands[i] = commandObj;
+                    let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
+                    CanAddName.push({ name: command.name, ref: commandObj });
+                    commands[i] = commandObj;
+                });
+                let refI = CanAddName.indexOf(CanAddName.find(can => can.name === "Commands"));
+                let ref = CanAddName[refI].ref.all;
+                ref.forEach((info, index) => {
+                    info.ref = commands[index];
+                });
+            }
+            if (icModule.imports) {
+                icModule.imports.forEach(importClass => {
+                    let import_ = new importClass();
+                    if (import_["iicImport"].onlyForBot == true) {
+                        import_["iicImport"].providers.forEach((provider, i) => {
+                            let Parameters = util_1.gccp(provider);
+                            let addedParameters = [];
+                            Parameters.forEach(parameter => {
+                                let found = CanAddName.find(can => {
+                                    return can.name == parameter;
+                                });
+                                let found_ = import_["providersParams"].find((can) => {
+                                    return can.name == parameter;
+                                });
+                                if (typeof found !== 'undefined') {
+                                    addedParameters.push(found.ref);
+                                }
+                                else if (typeof found_ !== 'undefined') {
+                                    addedParameters.push(found_.ref);
+                                }
+                                else {
+                                    addedParameters.push(undefined);
+                                }
+                            });
+                            let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)));
+                            providers.push(providerObj);
+                            CanAddName.push({ ref: providerObj, name: provider.name });
+                        });
+                        import_["iicImport"].imports.forEach((import__) => {
+                            import_["imports"].push(new import__());
+                        });
                     }
                 });
             }
-            let cNames = [];
-            commands.forEach(command => {
-                cNames.push(command["info"].name);
-            });
-            CanAddName.push({ ref: new classes_1.CommandsManager(client, commands, cNames, icModule), name: "CommandsManager" });
             let Parameters = util_1.gccp(target);
             let addedParameters = [];
             Parameters.forEach(parameter => {

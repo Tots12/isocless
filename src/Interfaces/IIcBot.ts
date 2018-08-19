@@ -1,9 +1,11 @@
 import { Type } from "../util";
 
-export interface IIcBot {
-    commands?: Type<any>[];
-    providers?: Type<any>[];
-    imports?: Type<any>[];
-    token: string;
-    prefix: string;
+export class IIcBot {
+    constructor(
+        public token: string,
+        public prefix: string,
+        public commands?: Type<any>[],
+        public imports?: Type<any>[],
+        public providers?: Type<any>[]
+    ) { }
 }
