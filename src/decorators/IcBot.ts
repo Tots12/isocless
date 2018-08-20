@@ -23,15 +23,7 @@ export const IcBot = (icModule: IIcBot) => {
                     let addedParameters: any[] = [];
 
                     Parameters.forEach(parameter => {
-                        let found = CanAddName.find(can => {
-                            return can.name == parameter;
-                        });
-
-                        if (typeof found !== 'undefined') {
-                            addedParameters.push(found.ref);
-                        } else {
-                            throw new Error(`No provider for ${parameter}!`);
-                        }
+                        addedParameters.push(undefined);
                     });
 
                     let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
