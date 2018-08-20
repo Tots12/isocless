@@ -25,7 +25,7 @@ exports.IcBot = (icModule) => {
                             addedParameters.push(found.ref);
                         }
                         else {
-                            addedParameters.push(undefined);
+                            throw new Error(`No provider for ${parameter}!`);
                         }
                     });
                     let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
@@ -58,7 +58,7 @@ exports.IcBot = (icModule) => {
                                     addedParameters.push(found_.ref);
                                 }
                                 else {
-                                    addedParameters.push(undefined);
+                                    throw new Error(`No provider for ${parameter}!`);
                                 }
                             });
                             let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)));
@@ -83,7 +83,7 @@ exports.IcBot = (icModule) => {
                             addedParameters.push(found.ref);
                         }
                         else {
-                            addedParameters.push(undefined);
+                            throw new Error(`No provider for ${parameter}!`);
                         }
                     });
                     let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)));
@@ -103,7 +103,7 @@ exports.IcBot = (icModule) => {
                             addedParameters.push(found.ref);
                         }
                         else {
-                            addedParameters.push(undefined);
+                            throw new Error(`No provider for ${parameter}!`);
                         }
                     });
                     let commandObj = new (Function.prototype.bind.apply(command, [null].concat(addedParameters)));
@@ -137,7 +137,7 @@ exports.IcBot = (icModule) => {
                                     addedParameters.push(found_.ref);
                                 }
                                 else {
-                                    addedParameters.push(undefined);
+                                    throw new Error(`No provider for ${parameter}!`);
                                 }
                             });
                             let providerObj = new (Function.prototype.bind.apply(provider, [null].concat(addedParameters)));
@@ -160,7 +160,7 @@ exports.IcBot = (icModule) => {
                     addedParameters.push(found.ref);
                 }
                 else {
-                    addedParameters.push(undefined);
+                    throw new Error(`No provider for ${parameter}!`);
                 }
             });
             let module = new (Function.prototype.bind.apply(target, [null].concat(addedParameters)));

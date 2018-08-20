@@ -30,7 +30,7 @@ export const IcBot = (icModule: IIcBot) => {
                         if (typeof found !== 'undefined') {
                             addedParameters.push(found.ref);
                         } else {
-                            addedParameters.push(undefined);
+                            throw new Error(`No provider for ${parameter}!`);
                         }
                     });
 
@@ -71,7 +71,7 @@ export const IcBot = (icModule: IIcBot) => {
                                 } else if (typeof found_ !== 'undefined') {
                                     addedParameters.push(found_.ref);
                                 } else {
-                                    addedParameters.push(undefined);
+                                    throw new Error(`No provider for ${parameter}!`);
                                 }
                             });
     
@@ -101,7 +101,7 @@ export const IcBot = (icModule: IIcBot) => {
                         if (typeof found !== 'undefined') {
                             addedParameters.push(found.ref);
                         } else {
-                            addedParameters.push(undefined);
+                            throw new Error(`No provider for ${parameter}!`);
                         }
                     });
 
@@ -125,7 +125,7 @@ export const IcBot = (icModule: IIcBot) => {
                         if (typeof found !== 'undefined') {
                             addedParameters.push(found.ref);
                         } else {
-                            addedParameters.push(undefined);
+                            throw new Error(`No provider for ${parameter}!`);
                         }
                     });
 
@@ -166,7 +166,7 @@ export const IcBot = (icModule: IIcBot) => {
                                 } else if (typeof found_ !== 'undefined') {
                                     addedParameters.push(found_.ref);
                                 } else {
-                                    addedParameters.push(undefined);
+                                    throw new Error(`No provider for ${parameter}!`);
                                 }
                             });
     
@@ -194,7 +194,7 @@ export const IcBot = (icModule: IIcBot) => {
                 if (typeof found !== 'undefined') {
                     addedParameters.push(found.ref);
                 } else {
-                    addedParameters.push(undefined);
+                    throw new Error(`No provider for ${parameter}!`);
                 }
             });
 
