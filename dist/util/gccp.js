@@ -16,6 +16,10 @@ function gccp(t) {
                         .split("(")[0]
                         .split("function ")[1];
                 }
+                else if (params[i].toString().includes("(")) {
+                    params[i] = param.toString()
+                        .split("(")[0];
+                }
             }
         });
     }

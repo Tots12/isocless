@@ -11,11 +11,14 @@ export function gccp(t: object): string[] {
                         .split("{")[0]
                         .split(" ")[1];
                 }
-        
+                
                 if (params[i].toString().includes("(") && params[i].toString().includes(")")) {
                     params[i] = param.toString()
                         .split("(")[0]
                         .split("function ")[1];
+                } else if (params[i].toString().includes("(")) {
+                    params[i] = param.toString()
+                        .split("(")[0];
                 }
             }
         });
