@@ -82,8 +82,8 @@ import * as Discord from 'discord.js';
 
 @IcCommand({
   info: {
-    name: 'ping',
-    description: 'Show the ping of the bot client'
+    name: 'help',
+    description: 'Show all bot commands'
   },
   canUseInPrivate: true
 })
