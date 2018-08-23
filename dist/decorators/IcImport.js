@@ -10,6 +10,8 @@ function IcImport(iicImport) {
         if (iicImport.imports) {
             iicImport.imports.forEach(importClass => {
                 let import_ = new importClass();
+                if (import_["iicImport"].onlyForBot === true)
+                    throw new Error("You can't use a import that's only for the bot!");
                 import_["iicImport"].providers.forEach((provider) => {
                     let Parameters = util_1.gccp(provider);
                     let addedParameters = [];

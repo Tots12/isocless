@@ -6,4 +6,3 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./decorators"));
 __export(require("./Interfaces"));
 __export(require("./classes"));
-__export(require("./modules"));

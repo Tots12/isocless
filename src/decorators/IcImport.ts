@@ -14,6 +14,9 @@ export function IcImport(iicImport: IIcImport) {
             iicImport.imports.forEach(importClass => {
                 let import_ = new importClass();
 
+                if (import_["iicImport"].onlyForBot === true)
+                    throw new Error("You can't use a import that's only for the bot!");
+
                 import_["iicImport"].providers.forEach((provider: Type<any>) => {
                     let Parameters: string[] = gccp(provider);
                     let addedParameters: any[] = [];
