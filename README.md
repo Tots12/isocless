@@ -24,17 +24,14 @@ import { OnReady, OnMessage, IcBot, CommandsModule, CommandsManager } from 'isoc
 import { Message } from 'discord.js';
 
 import { PingCommand } from './ping.command';
-import { HelpCommand } from './help.command';
 
 @IcBot({
     commands: [
-      PingCommand, 
-      HelpCommand
+      PingCommand
     ],
     providers: [],
     imports: [
-      CommandsModule, 
-      HelpModule
+      CommandsModule
     ],
     prefix: '#',
     token: 'Your bot token here!'
@@ -72,28 +69,6 @@ export class PingCommand implements Run {
  
   icRun(message: Discord.Message, args: string[]) {
     message.reply(`:ping_pong: Pong! ${Math.floor(this.client.ping)}`);
-  }
-}
-```
-
-```TypeScript
-import { IcCommand, Run, HelpService } from 'isocless';
-import * as Discord from 'discord.js';
-
-@IcCommand({
-  info: {
-    name: 'help',
-    description: 'Show all bot commands'
-  },
-  canUseInPrivate: true
-})
-export class HelpCommand implements Run {
-  construcotr(
-    private help: HelpService
-  ) { }
-  
-  icRun(message: Discord.Message, args: string[]) {
-    this.help.helpEmbed(message, 0x9a5be6);
   }
 }
 ```
