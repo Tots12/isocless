@@ -11,9 +11,9 @@ function gccp(t) {
                     .split(" ")[1];
             }
             if (params[i].toString().includes("(") && params[i].toString().includes(")")) {
-                params[i] = params[i].toString()
-                    .split("(")[0]
-                    .split("function ")[1];
+                params[i] = params[i].toString().split("(")[0];
+                if (params[i].toString().includes("function "))
+                    params[i] = params[i].toString().split("(")[0];
             }
             else if (param.toString().includes("(")) {
                 params[i] = params[i].toString()
