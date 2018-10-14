@@ -3,25 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 function gccp(t) {
     let params = Reflect.getMetadata('design:paramtypes', t);
-    if (params) {
+    if (typeof params != 'undefined') {
         params.forEach((param, i) => {
-            if (param) {
+            if (typeof param !== 'undefined') {
                 if (param.toString().includes("{") && param.toString().includes(" ")) {
                     params[i] = param.toString()
                         .split("{")[0]
                         .split(" ")[1];
                 }
-                if (params[i].toString().includes("(") && params[i].toString().includes(")")) {
-                    params[i] = params[i].toString()
+                if (param.toString().includes("(") && param.toString().includes(")")) {
+                    params[i] = param.toString()
                         .split("(")[0]
                         .split("function ")[1];
                 }
-                else if (params[i].toString().includes("(")) {
-                    params[i] = params[i].toString()
+                else if (param.toString().includes("(")) {
+                    params[i] = param.toString()
                         .split("(")[0];
                 }
-                if (params[i].toString().includes("!")) {
-                    params[i] = params[i].toString()
+                if (param.toString().includes("!")) {
+                    params[i] = param.toString()
                         .split("!")[0];
                 }
             }
